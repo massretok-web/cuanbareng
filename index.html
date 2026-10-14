@@ -2,59 +2,90 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#087f5b">
-  <title>CuanBareng</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; font-family: Arial, sans-serif;
-      background: #f3f7f5; color: #17352b;
-    }
-    header {
-      background: #087f5b; color: white;
-      padding: 24px 18px; border-radius: 0 0 22px 22px;
-    }
-    header h1 { margin: 0 0 8px; }
-    main { padding: 18px; max-width: 600px; margin: auto; }
-    .card {
-      background: white; padding: 18px; margin: 14px 0;
-      border-radius: 16px; box-shadow: 0 2px 10px #0000000b;
-    }
-    a.button {
-      display: inline-block; padding: 12px 16px;
-      background: #087f5b; color: white; text-decoration: none;
-      border-radius: 10px; font-weight: bold;
-    }
-    .muted { color: #60766d; font-size: 14px; line-height: 1.5; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#087f5b">
+<title>CuanBareng</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f7f5;color:#18352b}
+header{background:#087f5b;color:white;padding:25px 18px;border-radius:0 0 22px 22px}
+header h1{margin:0 0 8px}
+main{padding:18px;max-width:600px;margin:auto}
+.card{background:white;padding:18px;margin:14px 0;border-radius:16px;box-shadow:0 2px 10px #0000000b}
+label{display:block;margin:12px 0 6px;font-weight:bold}
+input{width:100%;padding:12px;border:1px solid #ccd8d2;border-radius:9px;font-size:16px}
+button{border:0;border-radius:9px;padding:12px 16px;background:#087f5b;color:white;font-weight:bold;font-size:15px;cursor:pointer;margin-top:10px}
+.secondary{background:#e4f3ec;color:#075c43}
+.item{padding:12px 0;border-bottom:1px solid #e5ece8;overflow-wrap:anywhere}
+.item:last-child{border:0}
+.muted{color:#60766d;font-size:14px;line-height:1.5}
+a{color:#087f5b}
+</style>
 </head>
 <body>
-  <header>
-    <h1>🌱 CuanBareng</h1>
-    <div>Berbagi rekomendasi, tumbuh bersama.</div>
-  </header>
-  <main>
-    <section class="card">
-      <h2>Selamat datang, bro!</h2>
-      <p>Temukan produk menarik dan bagikan tautan affiliate milikmu.</p>
-      <p class="muted">Versi awal CuanBareng. Belum terhubung ke sistem komisi TikTok Shop.</p>
-    </section>
-    <section class="card">
-      <h2>🛍️ Mulai affiliate</h2>
-      <p>Daftar atau buka akun affiliate melalui kanal resmi TikTok Shop.</p>
-      <a class="button" href="https://business.tiktokshop.com/id/affiliate" target="_blank" rel="noopener">Buka TikTok Shop</a>
-    </section>
-    <section class="card">
-      <h2>📈 Cara kerja</h2>
-      <p>1. Dapatkan tautan affiliate resmi.</p>
-      <p>2. Bagikan tautan kepada calon pembeli.</p>
-      <p>3. Komisi mengikuti ketentuan program affiliate.</p>
-    </section>
-    <footer class="muted">
-      CuanBareng tidak menjamin penghasilan. Komisi dan pelacakan penjualan belum tersedia di aplikasi ini.
-    </footer>
-  </main>
+<header>
+<h1>🌱 CuanBareng</h1>
+<div>Berbagi rekomendasi, tumbuh bersama.</div>
+</header>
+<main>
+<section class="card">
+<h2>Selamat datang, bro!</h2>
+<p>Kelola tautan produk affiliate kamu dalam satu tempat.</p>
+<p class="muted">Komisi diperoleh sesuai aturan program affiliate dan transaksi yang memenuhi syarat. Aplikasi ini tidak menjamin penghasilan.</p>
+</section>
+
+<section class="card">
+<h2>➕ Simpan tautan produk</h2>
+<label for="nama">Nama produk</label>
+<input id="nama" placeholder="Contoh: Tas ransel">
+<label for="tautan">Tautan affiliate</label>
+<input id="tautan" type="url" placeholder="https://..." inputmode="url">
+<button id="simpan">Simpan produk</button>
+</section>
+
+<section class="card">
+<h2>🛍️ Produk saya</h2>
+<div id="daftar" class="muted">Belum ada produk tersimpan.</div>
+</section>
+
+<section class="card">
+<h2>🚀 Mulai affiliate</h2>
+<p>Daftar melalui kanal resmi TikTok Shop Affiliate dan ikuti persyaratan yang berlaku.</p>
+<a href="https://business.tiktokshop.com/" target="_blank" rel="noopener">Kunjungi TikTok Shop</a>
+</section>
+
+<footer class="muted">Versi awal CuanBareng. Data tautan tersimpan di browser perangkat ini. Belum ada integrasi komisi atau pelacakan transaksi otomatis.</footer>
+</main>
+<script>
+const nama=document.getElementById('nama');
+const tautan=document.getElementById('tautan');
+const daftar=document.getElementById('daftar');
+let produk=[];
+try{produk=JSON.parse(localStorage.getItem('cuanbareng_produk')||'[]')}catch(e){}
+function tampilkan(){
+ daftar.innerHTML='';
+ if(!produk.length){daftar.textContent='Belum ada produk tersimpan.';return}
+ produk.forEach((p,i)=>{
+  const div=document.createElement('div');div.className='item';
+  const judul=document.createElement('strong');judul.textContent=p.nama;
+  const link=document.createElement('a');link.href=p.tautan;link.target='_blank';link.rel='noopener';link.textContent='Buka tautan produk';link.style.display='block';link.style.marginTop='8px';
+  const hapus=document.createElement('button');hapus.className='secondary';hapus.textContent='Hapus';hapus.onclick=()=>{produk.splice(i,1);simpanData()};
+  div.append(judul,link,hapus);daftar.append(div);
+ });
+}
+function simpanData(){
+ try{localStorage.setItem('cuanbareng_produk',JSON.stringify(produk));tampilkan()}
+ catch(e){alert('Penyimpanan tidak tersedia di browser ini.')}
+}
+document.getElementById('simpan').onclick=()=>{
+ const n=nama.value.trim(),t=tautan.value.trim();
+ if(!n||!t){alert('Isi nama produk dan tautannya dulu.');return}
+ try{const u=new URL(t);if(!['http:','https:'].includes(u.protocol))throw Error()}
+ catch(e){alert('Masukkan tautan web yang valid.');return}
+ produk.push({nama:n,tautan:t});simpanData();nama.value='';tautan.value='';
+};
+tampilkan();
+</script>
 </body>
 </html>
